@@ -8,18 +8,17 @@ class Solution:
         maxPadStr=''
         # traverse each char 
         l=len(s)
-
         for i,c in enumerate(s):
 
             # left or right extend test
             # j is length
             j=1
             while j <= l//2+1:
-
-                # left or right str
+                # left and right str
                 leftStr=s[i:i-j:-1] if (i-j)>=0 else  s[i::-1]
                 rightStr=s[i:i+j]  # odd
                 rightStr2=s[i+1:i+j+1] # even
+
                 # length
                 leftLen=len(leftStr)
                 rightLen=len(rightStr)
@@ -42,6 +41,7 @@ class Solution:
                 j+=1
 
         return maxPadStr
+
 if __name__ == "__main__":
     
     data = [
