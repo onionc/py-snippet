@@ -19,12 +19,12 @@ class Solution:
             area=lowHeight*(j-i)
             if area>maxA:
                 maxA=area
-            print(i,j,height[i],height[j])
+            #print(i,j,height[i],height[j])
             if height[i]>height[j]:
                 j-=1
             else:
                 i+=1
-            print(i,j)
+            #print(i,j)
 
         return maxA
 
