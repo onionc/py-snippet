@@ -1,6 +1,6 @@
 import sys
 import random
-from PyQt5.QtWidgets import QMainWindow, QFrame, QApplication, QDesktopWidget, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QFrame, QApplication, QDesktopWidget, QMessageBox, qApp
 from PyQt5.QtCore import Qt, pyqtSignal, QBasicTimer
 from PyQt5.QtGui import QPainter, QColor
 
@@ -51,7 +51,7 @@ class Board(QFrame):
     BaseSpeed = 300
 
     # 每次升级提高速度
-    SpeedUp = 100
+    SpeedUp = 50
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -296,7 +296,7 @@ class Board(QFrame):
             self.msg2StatusBar.emit("暂停中，按p键恢复游戏")
 
         else:
-            self.timer.start(self.Speed, self)
+            self.timer.start(self.speed, self)
             self.msg2StatusBar.emit(str(self.score))
 
         self.update()
@@ -360,8 +360,10 @@ class Board(QFrame):
         # 当前等级
         self.level=self.score//10+1
         # 简单加速度处理
-        speed = max(10, Board.BaseSpeed-self.level*Board.SpeedUp)
+        speed = max(10, Board.BaseSpeed-(self.level-1)*Board.SpeedUp) # level-1 代表1级为初始速度
         self.speed = speed
+        # 设置timer循环速度
+        self.timer.start(self.speed, self)
         
     def gameOver(self):
         '''结束界面'''
@@ -370,7 +372,7 @@ class Board(QFrame):
             self.initBoard()
             self.start()
         else:
-            self.quit()
+            qApp.quit()
 
 class Bricks(object):
     '''所有砖块'''
