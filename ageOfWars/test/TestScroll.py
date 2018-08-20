@@ -13,7 +13,7 @@ class War(QMainWindow):
     def initUI(self):
 
         self.lbl = QLabel(self)
-        self.qpix=QPixmap(sys.path[0]+'/resource/57001_one_punch_man.jpg').scaledToHeight(480)
+        self.qpix=QPixmap(sys.path[0]+'/../resource/57001_one_punch_man.jpg').scaledToHeight(480)
         self.lbl.setGeometry(self.qpix.rect())
         self.lbl.setPixmap(self.qpix)
         print(self.lbl)
