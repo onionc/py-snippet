@@ -16,7 +16,7 @@ class War(QMainWindow):
         self.qpix=QPixmap(sys.path[0]+'/../resource/57001_one_punch_man.jpg').scaledToHeight(480)
         self.lbl.setGeometry(self.qpix.rect())
         self.lbl.setPixmap(self.qpix)
-        print(self.lbl)
+        #print(self.lbl)
         # 添加滚动条，并添加组件
         scrollArea = ScrollArea(self)
         scrollArea.setWidgetResizable(True)
@@ -80,7 +80,7 @@ class ScrollArea(QScrollArea):
             return True
         return QScrollArea.eventFilter(self,obj, evt)
 
-   
+
 if __name__ == '__main__':
     app = QApplication([])
     war = War()
