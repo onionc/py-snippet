@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.DEBUG)
 class Cache(object):
 
     def __init__(self, func=None):
-        print(func)
+        
         # 获取缓存函数
         self._cache_func = func
         # redis实例
