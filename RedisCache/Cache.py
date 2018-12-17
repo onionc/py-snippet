@@ -7,13 +7,20 @@ import sys
 import os
 import hashlib
 import logging
-import functools
+from functools import wraps, partial
 logging.basicConfig(level=logging.DEBUG)
+
+
+def attach_wrapper(obj, func=None):
+    if func is None:
+        return partial(attach_wrapper, obj)
+    setattr(obj, func.__name__, func)
+    return func
 
 
 class Cache(object):
 
-    def __init__(self, key=None):
+    def __init__(self, *, key=None, **attr):
         # 指定key
         self._key = key
         # 缓存函数
@@ -26,6 +33,8 @@ class Cache(object):
         self._update = False
         # 删除标志
         self._delete = False
+        # 设置属性
+        self._attr = attr
 
     def key(self):
         """ 生成Key """
@@ -79,9 +88,13 @@ class Cache(object):
         args_temp = self._cache_func.args
         # 拿到类函数对象的类名和类对象的类名
         func_class_name = os.path.splitext(self._cache_func.__qualname__)[0]
-        obj_class_name = self._cache_func.args[0].__class__.__name__
-        if isinstance(args_temp[0], object) and func_class_name == obj_class_name:
-            args_temp = args_temp[1:]
+        obj_class_name = None
+        try:
+            self._cache_func.args[0].__class__.__name__
+            if func_class_name == obj_class_name and isinstance(args_temp[0], object):
+                args_temp = args_temp[1:]
+        except Exception:
+            pass
 
         ret_list.append(
             def_sha1(
@@ -95,6 +108,7 @@ class Cache(object):
         """ 设置缓存 """
         if not key:
             key = str(self.key())
+        logging.debug(f"redis set: {key}:{value},({self._ttl}s)")
         return self._redis.set(key, value, self._ttl)
 
     def get(self, key):
@@ -127,10 +141,9 @@ class Cache(object):
         """ 调用缓存 """
         self._cache_func = func
 
-        @functools.wraps(func)
+        @wraps(func)
         def wrapper(*args, **kwargs):
             # 存储函数参数
-
             self._cache_func.args = args
             self._cache_func.kwargs = kwargs
 
@@ -144,6 +157,7 @@ class Cache(object):
                 return self.delete(key)
 
             # 更新缓存
+            logging.debug('cache attr:'+str(self.__dict__))
             if not cache or self._update:
                 self._update = False
                 data = func(*args, **kwargs)
@@ -154,6 +168,11 @@ class Cache(object):
                 return False
 
             return json.loads(cache)
+
+        @attach_wrapper(wrapper)
+        def set_attr(**attr):
+            self.set_attr(**attr)
+
         return wrapper
 
 
