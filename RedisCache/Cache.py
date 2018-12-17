@@ -13,7 +13,6 @@ logging.basicConfig(level=logging.DEBUG)
 class Cache(object):
 
     def __init__(self, func=None):
-        
         # 获取缓存函数
         self._cache_func = func
         # redis实例
@@ -42,9 +41,11 @@ class Cache(object):
             coname = co.co_name
             if not filename:
                 continue
-            trace_list.insert(0, os.path.splitext(coname)[0])  # 函数名，如果存在，不存在则为<module>
-            trace_list.insert(0, os.path.splitext(filename)[0])  # 文件名
-            
+            # 函数名，如果存在，不存在则为<module>
+            trace_list.insert(0, os.path.splitext(coname)[0])
+            # 文件名
+            trace_list.insert(0, os.path.splitext(filename)[0])
+
             '''
             temp = "{0}({1}:{2})".format(
                 filename,
@@ -55,16 +56,18 @@ class Cache(object):
             '''
             f = f.f_back
 
+        # 哈希函数 PEP-8不建议用lambda
+        def_sha1 = lambda s: hashlib.md5(
+            str(s).encode('utf-8')
+        ).hexdigest().upper()
         # 有效堆栈字符串:堆栈哈希值:缓存函数:参数哈希值
-        def_sha1 = lambda s: hashlib.md5(str(s).encode('utf-8')).hexdigest().upper()
         ret_list = []
         ret_list.append(':'.join(trace_list))
         # ret_list.append(def_sha1(trace_hash_list))
         ret_list.append(self._cache_func.__name__)
         ret_list.append(
             def_sha1(
-                str(self._cache_func.args) + 
-                str(self._cache_func.kwargs)
+                str(self._cache_func.args) + str(self._cache_func.kwargs)
             )
         )
         print('key:'+':'.join(ret_list))
