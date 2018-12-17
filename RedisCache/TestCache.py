@@ -3,7 +3,7 @@
 from Cache import Cache
 
 
-@Cache
+@Cache()
 def all_data(status):
     """ 缓存数据 """
     print(f"this is all data, args={status}")
@@ -11,9 +11,17 @@ def all_data(status):
 
 
 class TestC(object):
+    """ 类中调用查看堆栈不同 """
     def get(self):
         t1 = all_data(10)
         return t1
+
+
+@Cache(key='X0011')
+def all_data_key(status):
+    """ 指定Key的缓存数据 """
+    print(f"this is all data (use key), args={status}")
+    return list(range(status))
 
 
 if __name__ == '__main__':
@@ -25,3 +33,8 @@ if __name__ == '__main__':
     print(a3)
     a4 = TestC().get()
     print(a4)
+    print("use key: -------------------------- ")
+    a5 = all_data_key(4)
+    print(a5)
+    a6 = all_data_key(5)
+    print(a6)

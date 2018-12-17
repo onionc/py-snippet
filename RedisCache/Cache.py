@@ -7,14 +7,17 @@ import sys
 import os
 import hashlib
 import logging
+import functools
 logging.basicConfig(level=logging.DEBUG)
 
 
 class Cache(object):
 
-    def __init__(self, func=None):
-        # 获取缓存函数
-        self._cache_func = func
+    def __init__(self, key=None):
+        # 指定key
+        self._key = key
+        # 缓存函数
+        self._cache_func = None
         # redis实例
         self._redis = _instance_redis
         # 过期时间
@@ -26,6 +29,12 @@ class Cache(object):
 
     def key(self):
         """ 生成Key """
+
+        if self._key:
+            """ 使用指定Key """
+            key = self._key
+            logging.debug("key: %s" % key)
+            return key
 
         # trace_hash_list = []  # 待哈希列表
         trace_list = []  # 待字符串列表
@@ -65,12 +74,21 @@ class Cache(object):
         ret_list.append(':'.join(trace_list))
         # ret_list.append(def_sha1(trace_hash_list))
         ret_list.append(self._cache_func.__name__)
+
+        # 过滤参数中的self对象
+        args_temp = self._cache_func.args
+        # 拿到类函数对象的类名和类对象的类名
+        func_class_name = os.path.splitext(self._cache_func.__qualname__)[0]
+        obj_class_name = self._cache_func.args[0].__class__.__name__
+        if isinstance(args_temp[0], object) and func_class_name == obj_class_name:
+            args_temp = args_temp[1:]
+
         ret_list.append(
             def_sha1(
-                str(self._cache_func.args) + str(self._cache_func.kwargs)
+                str(args_temp) + str(self._cache_func.kwargs)
             )
         )
-        print('key:'+':'.join(ret_list))
+        logging.debug('key:'+':'.join(ret_list))
         return ':'.join(ret_list)
 
     def set(self, key=None, value=None):
@@ -105,33 +123,38 @@ class Cache(object):
                 setattr(self, name, attr[k])
         return self
 
-    def __call__(self, *args, **kwargs):
-        """ 调用缓存方法 """
+    def __call__(self, func):
+        """ 调用缓存 """
+        self._cache_func = func
 
-        # 存储函数参数
-        self._cache_func.args = args
-        self._cache_func.kwargs = kwargs
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # 存储函数参数
 
-        # 获取key，取缓存
-        key = self.key()
-        cache = self.get(key)
+            self._cache_func.args = args
+            self._cache_func.kwargs = kwargs
 
-        # 删除缓存
-        if self._delete:
-            self._delete = True
-            return self.delete(key)
+            # 获取key，获取缓存
+            key = self.key()
+            cache = self.get(key)
 
-        # 更新缓存
-        if not cache or self._update:
-            self._update = False
-            data = self._cache_func(*args, **kwargs)
-            value = json.dumps(data)
+            # 删除缓存
+            if self._delete:
+                self._delete = True
+                return self.delete(key)
 
-            if self.set(key, value):
-                return data
-            return False
+            # 更新缓存
+            if not cache or self._update:
+                self._update = False
+                data = func(*args, **kwargs)
+                value = json.dumps(data)
 
-        return json.loads(cache)
+                if self.set(key, value):
+                    return data
+                return False
+
+            return json.loads(cache)
+        return wrapper
 
 
 if __name__ == '__main__':
