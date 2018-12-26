@@ -178,4 +178,3 @@ if __name__ == '__main__':
         logging.info(f"页码：{i}...")
         content = douban.get_index(i)
         douban.save(content, True)
-
