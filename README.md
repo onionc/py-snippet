@@ -8,3 +8,4 @@
 - yousee [Python简单语音识别并响应](https://github.com/onionc/py-snippet/wiki/Python%E7%AE%80%E5%8D%95%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB%E5%B9%B6%E5%93%8D%E5%BA%94) *中式英文是故意的，取UC音*
 - RedisCache 简单封装Redis做缓存
 - spider 爬虫学习记录
+- face_cover 人脸检测，加旋转检测
