@@ -12,3 +12,4 @@
 - GUI 
 
   - [combine_docx](https://github.com/onionc/py-snippet/edit/master/GUI/combine_docx/readme.md) 类似`Word`中的邮件合并功能，通过模板`docx`和`csv`文件替换生成多份`Word`，我GUI版小工具的hello-world
+- PdfFormat pdf格式简单分析
