@@ -53,17 +53,17 @@
 
    **PDF 文件由对象图组成, 间接引用构成它们之间的链接。**
 
- ![1559699185089](http://image.acfuu.com/mdImages/201906/hello_pdf\1559699185089.png)
+ ![1559699185089](http://image.acfuu.com/mdImages/201906/hello_pdf/1559699185089.png)
 
 *图1 《PDF explained》文件结构->对象*
 
 - PDF由四部分组成
 
-   ![1559629734691](http://image.acfuu.com/mdImages/201906/hello_pdf\1559629734691.png)
+   ![1559629734691](http://image.acfuu.com/mdImages/201906/hello_pdf/1559629734691.png)
 
 - PDF 处理流程
 
- ![1559629349714](http://image.acfuu.com/mdImages/201906/hello_pdf\1559629349714.png)
+ ![1559629349714](http://image.acfuu.com/mdImages/201906/hello_pdf/1559629349714.png)
 
 用一个实例来研究下结构。
 
@@ -71,7 +71,7 @@
 
 为了研究精简的PDF文档结构，新建了一个PDF，内容就是`Hello, PDF.`。
 
-  ![1559629210317](http://image.acfuu.com/mdImages/201906/hello_pdf\1559629210317.png)
+  ![1559629210317](http://image.acfuu.com/mdImages/201906/hello_pdf/1559629210317.png)
 
 *图4 hello.pdf，一个 hello world级别的 PDF*
 
@@ -189,7 +189,7 @@ trailer                 # 标识文件尾trailer对象开始
 
 1662的十六进制为`67E`, 将文件以十六进制格式打开，刚好是`10 0 obj`那个 xref 对象的开始位置。
 
-![1559714932549](http://image.acfuu.com/mdImages/201906/hello_pdf\1559714932549.png)
+![1559714932549](http://image.acfuu.com/mdImages/201906/hello_pdf/1559714932549.png)
 
 *图5 16进制查看起始位置的对象*
 
@@ -325,7 +325,7 @@ PNG规范中的过滤算法章节有说：
 
 虽然PDF不是图片，但是为实现最佳压缩，可以先使用过滤算法。
 
- ![1559725319805](http://image.acfuu.com/mdImages/201906/hello_pdf\1559725319805.png)
+ ![1559725319805](http://image.acfuu.com/mdImages/201906/hello_pdf/1559725319805.png)
 
 *图6 带有PNG压缩算法的交叉引用流的压缩和过滤*
 
@@ -386,7 +386,7 @@ def filter_up_reverse(stream_data, columns, colors=1, bitsPerComponent=8):
 
 对于`10 0 obj`对象，使用`filter_up_reverse(stream_unzip_data, 7) `调用，列宽为7来自`/DecodeParms <</Columns 7/Predictor 12>> ` 的`Columns`属性，另外：`Predictor`属性代表过滤器采用UP方法，取上行的原始数据。`show_hex_format()`方法是为了方便查看十六进制以图片的行列排列的格式。
 
- ![1560135051210](http://image.acfuu.com/mdImages/201906/hello_pdf\1560135051210.png)
+ ![1560135051210](http://image.acfuu.com/mdImages/201906/hello_pdf/1560135051210.png)
 
  *图7 反过滤 xref 数据*
 
@@ -396,11 +396,11 @@ def filter_up_reverse(stream_data, columns, colors=1, bitsPerComponent=8):
 
 由于不知道解析的xref数据格式对不对，还一直去转，期待转成`7 0 obj`的那种可视化的字符格式，最后在 [PDF 文件格式](https://wenku.baidu.com/view/ea92bbbfed3a87c24028915f804d2b160b4e868b.html?re=view) 文档中看到示例才反应过来，xref 流数据就是这样的格式。
 
- ![1560135563147](http://image.acfuu.com/mdImages/201906/hello_pdf\1560135563147.png)
+ ![1560135563147](http://image.acfuu.com/mdImages/201906/hello_pdf/1560135563147.png)
 
 *图8 xref数据分析示例*
 
-  ![1560137471619](http://image.acfuu.com/mdImages/201906/hello_pdf\1560137471619.png)
+  ![1560137471619](http://image.acfuu.com/mdImages/201906/hello_pdf/1560137471619.png)
 
  *图9 交叉引用流 (xref strem) 的属性*
 
