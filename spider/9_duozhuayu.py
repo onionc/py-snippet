@@ -19,7 +19,7 @@ class Duozhuayu(object):
         self.proxy_list = None
         self.proxy_ip = None
         self.proxies = None
-        self.proxies = {"http":"http://117.36.103.170:8118"}
+        #self.proxies = {"http":"http://117.36.103.170:8118"}
         self.allow_max_error_count = 2
 
     def get(self, url, proxy=False):
