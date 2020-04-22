@@ -2,7 +2,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-
 class CouponTicket{
     List<int[]> cp = new LinkedList<int[]>();
 
@@ -46,7 +45,6 @@ public class Coupon{
 
         int couponInt[][] = new int[coupon.length][2];
 
-
         // 初始化结果数组，dps 存储满减值（背包算法结果） ，dps_coupons 存储优惠券
         int[][] dps = new int[coupon.length+1][amountInt+1];
         CouponTicket[][] dps_coupons = new CouponTicket[coupon.length+1][amountInt+1];
@@ -55,7 +53,6 @@ public class Coupon{
                 couponInt[i][j] = (int)(coupon[i][j]*span);
             }
         }
-
 
         // 计算
         for(int i=1; i<=coupon.length; i++){
@@ -93,8 +90,6 @@ public class Coupon{
         System.out.println("优惠券使用和总满减金额如下：(优惠券未转换原金额)"); 
 
         System.out.println(dps_coupons[coupon.length][amountInt]);
-        System.out.println(dps[coupon.length][amountInt]); 
-
         System.out.println(dps[coupon.length][amountInt]/(double)span); 
     }
 }
