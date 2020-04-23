@@ -8,8 +8,7 @@ class CouponTicket{
     public CouponTicket copy(){
         CouponTicket r = new CouponTicket();
         for(int[] c : cp){
-            int[] x = {c[0], c[1]};
-            r.cp.add(x);
+            r.cp.add(c);
         }
         return r;
     }
